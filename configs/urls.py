@@ -16,11 +16,15 @@ Including another URLconf
 
 from django.urls import path
 # from users.views import TestApiView,Test2View
-from users.views import UserListCreateView,UserRetrieveUpdateDestroy
+# from users.views import UserListCreateView,UserRetrieveUpdateDestroy
+from users.views import UserListCreateView, UserRetrieveUpdateDestroyView
 
 urlpatterns = [
     # path('tests', TestApiView.as_view(), name='user_test'),
     # path('tests/<int:pk>', Test2View.as_view(), name='user_test_pk_view')
-    path('users',UserListCreateView.as_view(), name='users_read_create_view'),
-    path('users/<int:pk>',UserRetrieveUpdateDestroy.as_view(), name='users_retrieve_update_delete_list')
+    # path('users',UserListCreateView.as_view(), name='users_read_create_view'),
+    # path('users/<int:pk>',UserRetrieveUpdateDestroy.as_view(), name='users_retrieve_update_delete_list'),
+    path('users', UserListCreateView.as_view(), name='users_create_list_view'),
+    path('users/<int:pk>', UserRetrieveUpdateDestroyView.as_view(), name='users_retrieve_update_delete_view')
+
 ]
