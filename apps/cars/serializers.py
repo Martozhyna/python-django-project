@@ -12,4 +12,4 @@ class CarSerializer(serializers.ModelSerializer):
 class CarListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarModel
-        fields = 'id', "model", 'year'
+        fields = 'id', "model", 'price'

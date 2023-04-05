@@ -1,77 +1,73 @@
+from django.http import Http404
 from rest_framework import status
+from rest_framework.generics import get_object_or_404, GenericAPIView,ListAPIView,ListCreateAPIView, RetrieveAPIView, \
+    CreateAPIView, RetrieveDestroyAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.mixins import ListModelMixin,RetrieveModelMixin,CreateModelMixin,UpdateModelMixin,DestroyModelMixin
 
 from apps.cars.models import CarModel
 from apps.cars.serializers import CarSerializer, CarListSerializer
 
 
-class CarListCreateView(APIView):
+# class CarListCreateView(GenericAPIView, ListModelMixin, CreateModelMixin):
+#     queryset = CarModel.objects.all()
+#     serializer_class = CarSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         return super().list(request, *args, **kwargs)
+#
+#     def post(self, request, *args, **kwargs):
+#         return super().create(request, *args, **kwargs)
+#
+#
+# class CarRetrieveUpdateDestroyView(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+#     queryset = CarModel.objects.all()
+#     serializer_class = CarSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         return super().retrieve(request, *args, **kwargs)
+#
+#     def put(self, request, *args, **kwargs):
+#         return super().update(request, *args, **kwargs)
+#
+#     def patch(self, request, *args, **kwargs):
+#         return super().partial_update(request, *args, **kwargs)
+#
+#     def delete(self, request, *args, **kwargs):
+#         return super().destroy(request, *args, **kwargs)
 
-    def get(self, *args, **kwargs):
-        cars = CarModel.objects.all()
-        serializer = CarListSerializer(instance=cars, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, *args, **kwargs):
-        data = self.request.data
-        serializer = CarSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class CarListCreateView(ListCreateAPIView):
+    queryset = CarModel.objects.all()
 
 
-class CarRetrieveUpdateDestroyView(APIView):
+    def get_serializer_class(self):
+        return CarSerializer if self.request.method !='GET' else CarListSerializer
 
-    def get(self, *args, **kwargs):
-        pk = kwargs.get('pk')
+    def get_queryset(self):
+        qs = CarModel.objects.all()
+        params_dict = self.request.query_params.dict()
 
-        try:
-            car = CarModel.objects.get(pk=pk)
-        except CarModel.DoesNotExist:
-            return Response('Not found', status=status.HTTP_404_NOT_FOUND)
+        if 'year' in params_dict:
+            qs = qs.filter(year__gte=params_dict['year'])
 
-        serializer = CarSerializer(car)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return qs
 
-    def put(self, *args, **kwargs):
-        pk = kwargs.get('pk')
-        data: dict = self.request.data
 
-        try:
-            car = CarModel.objects.get(pk=pk)
-        except CarModel.DoesNotExist:
-            return Response('Not found', status=status.HTTP_404_NOT_FOUND)
+class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    queryset = CarModel.objects.all()
+    serializer_class = CarSerializer
 
-        serializer = CarSerializer(car, data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, *args, **kwargs):
-        pk = kwargs.get('pk')
-        data = self.request.data
 
-        try:
-            car = CarModel.objects.get(pk=pk)
-        except CarModel.DoesNotExist:
-            return Response('Not found', status=status.HTTP_404_NOT_FOUND)
 
-        serializer = CarSerializer(car, data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, *args, **kwargs):
-        pk = kwargs.get('pk')
 
-        try:
-            car = CarModel.objects.get(pk=pk)
-        except CarModel.DoesNotExist:
-            return Response('Not found', status=status.HTTP_404_NOT_FOUND)
 
-        car.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
 
 
 

@@ -1,12 +1,13 @@
 from django.db import models
+from django.core import validators as V
 
 
 class CarModel(models.Model):
     class Meta:
         db_table = 'cars'
 
-    model = models.CharField(max_length=20)
+    model = models.CharField(max_length=20, validators=[V.MinLengthValidator(2)])
     year = models.IntegerField()
-    seat = models.IntegerField()
-    basket = models.CharField(max_length=20)
-    engine = models.FloatField()
+    price = models.IntegerField()
+    created_add = models.DateTimeField(auto_now_add=True)
+    updated_add = models.DateTimeField(auto_now=True)
