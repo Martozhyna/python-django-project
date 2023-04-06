@@ -6,10 +6,10 @@ from apps.cars.models import CarModel
 class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarModel
-        fields = '__all__'
+        fields = 'id', 'model', 'year', 'price', 'auto_park'
 
 
 class CarListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarModel
-        fields = 'id', "model", 'price'
+        fields = 'id', "model", 'price',

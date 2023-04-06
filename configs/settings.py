@@ -28,15 +28,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'users.UserModel'
+
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
 
     #     my_apps
-    'apps.cars'
+    'apps.users',
+    'apps.cars',
+    'apps.auto_parks'
 ]
 
 MIDDLEWARE = [
