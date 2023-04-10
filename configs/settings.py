@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
     #     my_apps
+    'core',
+    'apps.auth',
     'apps.cars',
     'apps.users',
     'apps.auto_parks'
