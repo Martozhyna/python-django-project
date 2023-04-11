@@ -1,8 +1,8 @@
-from rest_framework.serializers import ModelSerializer, RelatedField, StringRelatedField
+from rest_framework.serializers import ModelSerializer, RelatedField, StringRelatedField, ValidationError
 
 from core.dataclasses.auto_park_dataclass import AutoPark
 
-from apps.cars.models import CarModel
+from .models import CarModel
 
 
 class AutoParkRelatedFieldSerializer(RelatedField):
@@ -17,11 +17,8 @@ class CarSerializer(ModelSerializer):
 
     class Meta:
         model = CarModel
-        fields = ('id', 'model', 'year', 'price', 'auto_park')
+        fields = ('id', 'model', 'year', 'price', 'photo', 'auto_park')
         # depth = 2 вкладеність
 
 
-class CarListSerializer(ModelSerializer):
-    class Meta:
-        model = CarModel
-        fields = ('id', "model", 'price', 'auto_park')
+
