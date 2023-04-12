@@ -1,8 +1,10 @@
-from rest_framework.serializers import ModelSerializer
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
-from apps.users.models import UserModel as User, ProfileModel
+from rest_framework.serializers import ModelSerializer
+
+from apps.users.models import ProfileModel
+from apps.users.models import UserModel as User
 
 UserModel = get_user_model()
 
@@ -10,7 +12,7 @@ UserModel = get_user_model()
 class ProfileSerializer(ModelSerializer):
     class Meta:
         model = ProfileModel
-        fields = ('id', 'name', 'surname', 'age')
+        fields = ('id', 'name', 'surname', 'age', 'photo')
 
 
 class UserSerializer(ModelSerializer):
