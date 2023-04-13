@@ -1,7 +1,9 @@
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework import status
+from rest_framework.generics import DestroyAPIView, GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.response import Response
 
-from apps.cars.models import CarModel
-from apps.cars.serializers import CarSerializer
+from .models import CarModel, CarPhotoModel
+from .serializers import CarPhotoSerializer, CarSerializer
 
 
 class CarListCreateView(ListAPIView):
@@ -20,3 +22,24 @@ class CarListCreateView(ListAPIView):
 class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = CarModel.objects.all()
     serializer_class = CarSerializer
+
+
+class CarAddPhotosView(GenericAPIView):
+    queryset = CarModel.objects.all()
+
+    def post(self, *args, **kwargs):
+        files = self.request.FILES
+        car = self.get_object()
+        for key in files:
+            serializer = CarPhotoSerializer(data={'photo': files[key]})
+            serializer.is_valid(raise_exception=True)
+            serializer.save(car=car)
+        serializer = CarSerializer(car)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class CarPhotoDeleteView(DestroyAPIView):
+    queryset = CarPhotoModel.objects.all()
+
+    def perform_destroy(self, instance):
+        instance.photo.delete()

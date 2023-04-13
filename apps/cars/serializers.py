@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer, RelatedField, StringRela
 
 from core.dataclasses.auto_park_dataclass import AutoPark
 
-from .models import CarModel
+from .models import CarModel, CarPhotoModel
 
 
 class AutoParkRelatedFieldSerializer(RelatedField):
@@ -11,14 +11,21 @@ class AutoParkRelatedFieldSerializer(RelatedField):
         return {'id': value.id, 'name': value.name}
 
 
+class CarPhotoSerializer(ModelSerializer):
+    class Meta:
+        model = CarPhotoModel
+        fields = ('photo',)
+
+    def to_representation(self, instance):
+        return instance.photo.url
+
+
 class CarSerializer(ModelSerializer):
     # auto_park = StringRelatedField()
     auto_park = AutoParkRelatedFieldSerializer(read_only=True)
+    photos = CarPhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = CarModel
-        fields = ('id', 'model', 'year', 'price', 'photo', 'auto_park')
+        fields = ('id', 'model', 'year', 'price', 'photos', 'auto_park')
         # depth = 2 вкладеність
-
-
-

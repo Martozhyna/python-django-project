@@ -18,6 +18,16 @@ class CarModel(models.Model):
     year = models.IntegerField(validators=[V.MinValueValidator(1886), V.MaxValueValidator(datetime.now().year)])
     price = models.IntegerField(blank=True, default=1000)
     auto_park = models.ForeignKey(AutoParkModel, on_delete=models.CASCADE, related_name='cars')
-    photo = models.ImageField(upload_to= upload_to, blank=True)
     created_add = models.DateTimeField(auto_now_add=True)
     updated_add = models.DateTimeField(auto_now=True)
+
+    def __repr__(self):
+        return str(self.__dict__)
+
+
+class CarPhotoModel(models.Model):
+    class Meta:
+        db_table = 'cars_photo'
+
+    photo = models.ImageField(upload_to=upload_to, blank=True)
+    car = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name='photos')
