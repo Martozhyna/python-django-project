@@ -1,9 +1,10 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core import validators as V
+from django.db import models
+
+from core.enums.regex_enum import RegEx
 
 from apps.users.managers import UserManager
-from core.enums.regex_enum import RegEx
 
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
