@@ -1,11 +1,9 @@
+from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core import validators as V
-from django.db import models
-
-from core.enums.regex_enum import RegEx
-from core.services.uppload_users_profile_service import upload_to
 
 from apps.users.managers import UserManager
+from core.enums.regex_enum import RegEx
 
 
 class UserModel(AbstractBaseUser, PermissionsMixin):
@@ -34,5 +32,4 @@ class ProfileModel(models.Model):
     surname = models.CharField(max_length=20, default='Doe',
                                validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
     age = models.IntegerField(validators=[V.MinValueValidator(14), ])
-    photo = models.ImageField(upload_to=upload_to, blank=True)
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='profile')
