@@ -7,6 +7,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import BlacklistMixin, Token
 
 from core.enums.action_token_enum import ActionEnum
+from core.enums.password_recovery_token_enum import PasswordRecoveryEnum
 from core.exceptions.jwt_exception import JWTException
 
 from apps.users.models import UserModel as User
@@ -22,6 +23,11 @@ class ActionToken(BlacklistMixin, Token):
 class ActivateToken(ActionToken):
     token_type = ActionEnum.ACTIVATE.token_type
     lifetime = ActionEnum.ACTIVATE.exp_time
+
+
+class PasswordRecoveryToken(ActionToken):
+    token_type = PasswordRecoveryEnum.PASSWORD_RECOVERY.token_type
+    lifetime = PasswordRecoveryEnum.PASSWORD_RECOVERY.exp_time
 
 
 class JWTService:
