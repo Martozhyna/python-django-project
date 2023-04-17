@@ -11,7 +11,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = 'auth_user'
 
-    email = models.EmailField(unique=True, validators=[V.MinLengthValidator(6)])
+    email = models.EmailField(unique=True)
     password = models.CharField(max_length=128,
                                 validators=[V.RegexValidator(RegEx.PASSWORD.pattern, RegEx.PASSWORD.msg)])
     is_active = models.BooleanField(default=False)
@@ -28,9 +28,8 @@ class ProfileModel(models.Model):
     class Meta:
         db_table = 'profile'
 
-    name = models.CharField(max_length=20, default='John',
-                            validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
-    surname = models.CharField(max_length=20, default='Doe',
-                               validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
-    age = models.IntegerField(validators=[V.MinValueValidator(14), ])
+    name = models.CharField(max_length=20, validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
+    surname = models.CharField(max_length=20, validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
+    age = models.IntegerField(validators=[V.MinValueValidator(18), V.MaxValueValidator(150)])
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='profile')
+

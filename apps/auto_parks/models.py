@@ -11,7 +11,7 @@ UserModel: User = get_user_model()
 
 class AutoParkModel(models.Model):
     class Meta:
-        db_table = 'auto_park'
+        db_table = 'auto_park',
 
     name = models.CharField(max_length=20, default='MyAutoPark',
                             validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.transaction import atomic
 
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or_404
@@ -15,10 +16,9 @@ from apps.users.serializers import UserSerializer
 UserModel: User = get_user_model()
 
 
-
 class AuthRegisterView(CreateAPIView):
     serializer_class = UserSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
 
 class ActivateUserView(GenericAPIView):
@@ -34,6 +34,8 @@ class ActivateUserView(GenericAPIView):
 
 
 class PasswordRecoveryView(GenericAPIView):
+    permission_classes = (AllowAny,)
+
     def post(self, *args, **kwargs):
         data = self.request.data
         user = get_object_or_404(UserModel, email=data['email'])
@@ -42,17 +44,15 @@ class PasswordRecoveryView(GenericAPIView):
 
 
 class PasswordChangeView(GenericAPIView):
+    permission_classes = (AllowAny,)
 
+    @atomic
     def post(self, *args, **kwargs):
         token = kwargs['token']
-        user = JWTService.validate_token(token, PasswordRecoveryToken)
+        user: User = JWTService.validate_token(token, PasswordRecoveryToken)
         data = self.request.data
         serializer = AuthPasswordSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         user.set_password(data['password'])
         user.save()
-        return Response('Password successfully changed', status=status.HTTP_200_OK)
-
-
-
-
+        return Response(status=status.HTTP_200_OK)

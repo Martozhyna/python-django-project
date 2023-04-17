@@ -12,6 +12,7 @@ from apps.auto_parks.models import AutoParkModel
 class CarModel(models.Model):
     class Meta:
         db_table = 'cars'
+        ordering = ('id',)
 
     model = models.CharField(max_length=20,
                              validators=[V.RegexValidator(RegEx.BRAND.pattern, RegEx.BRAND.msg)])

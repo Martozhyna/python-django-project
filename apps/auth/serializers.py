@@ -1,13 +1,17 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from apps.users.models import UserModel as User
 
 UserModel: User = get_user_model()
 
 
-class AuthPasswordSerializer(ModelSerializer):
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class AuthPasswordSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('password',)
