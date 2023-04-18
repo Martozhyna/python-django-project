@@ -8,6 +8,8 @@ from core.services.uppload_car_services import upload_to
 
 from apps.auto_parks.models import AutoParkModel
 
+from .managers import CarManager
+
 
 class CarModel(models.Model):
     class Meta:
@@ -21,6 +23,8 @@ class CarModel(models.Model):
     auto_park = models.ForeignKey(AutoParkModel, on_delete=models.CASCADE, related_name='cars')
     created_add = models.DateTimeField(auto_now_add=True)
     updated_add = models.DateTimeField(auto_now=True)
+
+    objects = CarManager.as_manager()
 
     def __repr__(self):
         return str(self.__dict__)
