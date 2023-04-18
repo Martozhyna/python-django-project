@@ -32,4 +32,3 @@ class ProfileModel(models.Model):
     surname = models.CharField(max_length=20, validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
     age = models.IntegerField(validators=[V.MinValueValidator(18), V.MaxValueValidator(150)])
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='profile')
-

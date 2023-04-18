@@ -11,12 +11,10 @@ UserModel: User = get_user_model()
 
 class AutoParkModel(models.Model):
     class Meta:
-        db_table = 'auto_park',
+        db_table = 'auto_park'
 
-    name = models.CharField(max_length=20, default='MyAutoPark',
+    name = models.CharField(max_length=20,
                             validators=[V.RegexValidator(RegEx.NAME.pattern, RegEx.NAME.msg)])
-    created_add = models.DateTimeField(auto_now_add=True)
-    updated_add = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='auto_parks')
 
     def __str__(self):
