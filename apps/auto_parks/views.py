@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from apps.auto_parks.serializers import AutoParkSerializer
 from apps.cars.serializers import CarSerializer
+from .filters import AutoParksFilter
 
 from .models import AutoParkModel
 
@@ -13,6 +14,7 @@ class AutoParkListCreateView(ListCreateAPIView):
     serializer_class = AutoParkSerializer
     queryset = AutoParkModel.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    filterset_class = AutoParksFilter
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
