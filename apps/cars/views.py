@@ -15,7 +15,8 @@ class CarListCreateView(ListAPIView):
     permission_classes = (AllowAny, )
 
     def get_queryset(self):
-        qs = CarModel.objects.get_cars_by_auto_park_id(3)
+        # qs = CarModel.objects.get_cars_by_auto_park_id(3)
+        qs = CarModel.objects.all()
         params_dict = self.request.query_params.dict()
 
         if 'year' in params_dict:
