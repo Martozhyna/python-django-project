@@ -3,7 +3,7 @@ from .models import AutoParkModel
 
 
 class AutoParksFilter(filters.FilterSet):
-    cars_gt = filters.NumberFilter(field_name='cars', lookup_expr='year__gt')
+    cars_gt = filters.NumberFilter(field_name='cars', lookup_expr='year__gt', distinct=True)
 
     class Meta:
         model = AutoParkModel
