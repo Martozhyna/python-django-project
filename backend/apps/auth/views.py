@@ -6,14 +6,20 @@ from rest_framework.generics import CreateAPIView, GenericAPIView, get_object_or
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from core.services.email_service import EmailService
 from core.services.jwt_service import ActivateToken, JWTService, PasswordRecoveryToken
 
-from apps.auth.serializers import AuthPasswordSerializer
+from apps.auth.serializers import AuthPasswordSerializer, TokenPairSerializer
 from apps.users.models import UserModel as User
 from apps.users.serializers import UserSerializer
 
 UserModel: User = get_user_model()
+
+
+class TokenPairView(TokenObtainPairView):
+    serializer_class = TokenPairSerializer
 
 
 class AuthRegisterView(CreateAPIView):
