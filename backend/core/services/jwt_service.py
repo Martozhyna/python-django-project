@@ -30,6 +30,11 @@ class PasswordRecoveryToken(ActionToken):
     lifetime = PasswordRecoveryEnum.PASSWORD_RECOVERY.exp_time
 
 
+class SocketToken(ActionToken):
+    token_type = ActionEnum.SOCKET.token_type
+    lifetime = ActionEnum.SOCKET.exp_time
+
+
 class JWTService:
     @staticmethod
     def create_token(user, token_class: ActionTokenClassType):

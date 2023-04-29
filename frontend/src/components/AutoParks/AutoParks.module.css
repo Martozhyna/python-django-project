@@ -1,0 +1,10 @@
+.AutoParks{
+    display: flex;
+}
+
+.AutoParks div{
+    min-width: 50%;
+}
+ .chat{
+     background: lightblue;
+ }

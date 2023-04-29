@@ -11,7 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.utils import swagger_auto_schema
 
 from core.services.email_service import EmailService
-from core.services.jwt_service import ActivateToken, JWTService, PasswordRecoveryToken
+from core.services.jwt_service import ActivateToken, JWTService, PasswordRecoveryToken, SocketToken
 
 from apps.auth.serializers import AuthPasswordSerializer, EmailSerializer, TokenPairSerializer
 from apps.users.models import UserModel as User
@@ -90,3 +90,11 @@ class PasswordChangeView(GenericAPIView):
         user.set_password(data['password'])
         user.save()
         return Response(status=status.HTTP_200_OK)
+
+
+class SocketTokenView(GenericAPIView):
+    def get(self, *args, **kwargs):
+        user = self.request.user
+        token = JWTService.create_token(user, SocketToken)
+        return Response({'token': str(token)}, status.HTTP_200_OK)
+

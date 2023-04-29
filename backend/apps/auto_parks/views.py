@@ -1,7 +1,9 @@
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, ListCreateAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+
+from core.services.jwt_service import JWTService, SocketToken
 
 from apps.auto_parks.serializers import AutoParkSerializer
 from apps.cars.serializers import CarSerializer
@@ -15,6 +17,7 @@ class AutoParkListCreateView(ListCreateAPIView):
     queryset = AutoParkModel.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = AutoParksFilter
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -34,3 +37,5 @@ class AutoParkCreateListCarsView(CreateAPIView):
         auto_park = self.get_object()
         serializer = self.serializer_class(auto_park.cars, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
+
+
