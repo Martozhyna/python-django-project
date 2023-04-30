@@ -3,8 +3,8 @@ from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
 from djangochannelsrestframework.observer import model_observer
 
-# from .models import AutoParksModel, ChatModel
-# from .serializers import AutoParkSerializer
+from .models import AutoParkModel, ChatModel
+from .serializers import AutoParkSerializer
 
 
 class AutoParkConsumers(GenericAsyncAPIConsumer):
@@ -35,16 +35,16 @@ class AutoParkConsumers(GenericAsyncAPIConsumer):
                     'user': self.name
                 }
             )
-            # messages = await self.get_last_five_messages()
-            # for item in messages:
-            #     await self.channel_layer.group_send(
-            #         self.room_name,
-            #         {
-            #             'type': 'sender',
-            #             'message': item['message'],
-            #             'user': item['owner']
-            #         }
-            #     )
+            messages = await self.get_last_five_messages()
+            for item in messages:
+                await self.channel_layer.group_send(
+                    self.room_name,
+                    {
+                        'type': 'sender',
+                        'message': item['message'],
+                        'user': item['owner']
+                    }
+                )
 
     async def sender(self, event):
         await self.send_json(event)
@@ -60,25 +60,25 @@ class AutoParkConsumers(GenericAsyncAPIConsumer):
                 'id': request_id
             }
         )
-        # await self.save_message_to_db(data, self.scope['user'])
+        await self.save_message_to_db(data, self.scope['user'])
 
-    # @model_observer(AutoParksModel, serializer_class=AutoParkSerializer)
-    # async def auto_park_activity(self, message, action, subscribing_request_ids, **kwargs):
-    #     for request_id in subscribing_request_ids:
-    #         await self.reply(data=message, action=action, request_id=request_id)
+    @model_observer(AutoParkModel, serializer_class=AutoParkSerializer)
+    async def auto_park_activity(self, message, action, subscribing_request_ids, **kwargs):
+        for request_id in subscribing_request_ids:
+            await self.reply(data=message, action=action, request_id=request_id)
 
-    # @action()
-    # async def subscribe_to_auto_park_activity(self, request_id, **kwargs):
-    #     await self.auto_park_activity.subscribe(request_id=request_id)
+    @action()
+    async def subscribe_to_auto_park_activity(self, request_id, **kwargs):
+        await self.auto_park_activity.subscribe(request_id=request_id)
 
     @database_sync_to_async
     def get_profile_name(self):
         return self.scope['user'].profile.name
 
-    # @database_sync_to_async
-    # def save_message_to_db(self, message, user):
-    #     ChatModel.objects.create(message=message, owner=user)
+    @database_sync_to_async
+    def save_message_to_db(self, message, user):
+        ChatModel.objects.create(message=message, owner=user)
 
-    # @database_sync_to_async
-    # def get_last_five_messages(self):
-    #     return [{'message': item.message, 'owner': item.owner.profile.name} for item in ChatModel.objects.reverse()[:5]]
+    @database_sync_to_async
+    def get_last_five_messages(self):
+        return [{'message': item.message, 'owner': item.owner.profile.name} for item in ChatModel.objects.reverse()[:5]]
